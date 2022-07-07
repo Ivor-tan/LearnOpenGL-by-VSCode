@@ -49,6 +49,8 @@
         "streambuf": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "shader": "cpp"
+        "shader": "cpp",
+        "list": "cpp",
+        "map": "cpp"
     }
 }
