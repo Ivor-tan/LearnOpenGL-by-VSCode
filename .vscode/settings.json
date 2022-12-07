@@ -52,5 +52,6 @@
         "shader": "cpp",
         "list": "cpp",
         "map": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/include/glm"
 }
