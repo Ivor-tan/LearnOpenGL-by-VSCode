@@ -4292,9 +4292,9 @@ static stbi_uc first_row_filter[5] =
 static int stbi__paeth(int a, int b, int c)
 {
     int p = a + b - c;
-    int pa = abs(p - a);
-    int pb = abs(p - b);
-    int pc = abs(p - c);
+    int pa = std::abs(p - a);
+    int pb = std::abs(p - b);
+    int pc = std::abs(p - c);
     if (pa <= pb && pa <= pc) return a;
     if (pb <= pc) return b;
     return c;
@@ -5128,9 +5128,8 @@ static void *stbi__bmp_load(stbi__context *s, int *x, int *y, int *comp, int req
     info.all_a = 255;
     if (stbi__bmp_parse_header(s, &info) == NULL)
         return NULL; // error code already set
-
     flip_vertically = ((int)s->img_y) > 0;
-    s->img_y = abs((int)s->img_y);
+    s->img_y = std::abs((int)s->img_y);
 
     mr = info.mr;
     mg = info.mg;
