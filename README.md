@@ -8,3 +8,6 @@ exe程序打包工具 Enigma Virtual Box     下载地址：https://enigmaprotec
 DEAR_IMGUI  图形界面工具
 
 https://docs.gl/   OpenGL在线文档
+
+
+GLSL Wiki https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)
