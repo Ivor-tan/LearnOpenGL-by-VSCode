@@ -2,7 +2,7 @@
 # 'make'        build executable file 'main'
 # 'make clean'  removes all .o and executable files
 #
-
+IMGUI_DIR = include/imgui
 # define the Cpp compiler to use
 CXX = g++
 
@@ -52,10 +52,13 @@ INCLUDES	:= $(patsubst %,-I%, $(INCLUDEDIRS:%/=%))
 LIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
 
 # define the C source files
-SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
-
+# SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
+SOURCES		= $(SOURCEDIRS)/HelloWindow.cpp 
+SOURCES		+= $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
+SOURCES 	+= $(IMGUI_DIR)/imgui_impl_glfw.cpp $(IMGUI_DIR)/imgui_impl_opengl3.cpp
 # define the C object files 
 OBJECTS		:= $(SOURCES:.cpp=.o)
+# OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
 
 #
 # The following part of the makefile is generic; it can be used to 

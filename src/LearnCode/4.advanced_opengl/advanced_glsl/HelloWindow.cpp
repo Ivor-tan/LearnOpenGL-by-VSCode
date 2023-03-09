@@ -10,9 +10,7 @@
 #include <learnopengl/shader.h>
 #include <learnopengl/camera.h>
 #include <learnopengl/model.h>
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_opengl3.h>
-#include <imgui/imgui_impl_glfw.h>
+
 #include <iostream>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -34,8 +32,6 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-
-const char* glsl_version = "#version 130";
 
 int main()
 {
@@ -59,13 +55,12 @@ int main()
         glfwTerminate();
         return -1;
     }
-
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-    // glfwSetCursorPosCallback(window, mouse_callback);//鼠标回调
+    glfwSetCursorPosCallback(window, mouse_callback);
 
-    // tell GLFW to capture our mouse （GLFW_CURSOR_DISABLED 隐藏了鼠标）
-    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // tell GLFW to capture our mouse
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     // glad: load all OpenGL function pointers
     // ---------------------------------------
@@ -75,7 +70,7 @@ int main()
         return -1;
     }
 
-    // configure global opengl state
+// configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
@@ -169,19 +164,6 @@ int main()
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
   
-    //imgui
-    glfwSwapInterval(1); // Enable vsync
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    // io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange; // 屏蔽系统光标
-    // io.MouseDrawCursor = true;  // ImGui 自行绘制
-    // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init(glsl_version);
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
     // render loop
     // -----------
     while (!glfwWindowShouldClose(window))
@@ -200,27 +182,6 @@ int main()
         // ------
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        //imgui
-        // Start the Dear ImGui frame
-        // if (!io.WantCaptureMouse) {
-        //     ImGui::SetMouseCursor(ImGuiMouseCursor_None);
-        // }else{
-        //     ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
-        // }
-        
-        static float f = 0.0f;
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        ImGui::Begin("Hello, world!");   
-        ImGui::Text("This is some useful text.");
-        ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-        ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-        ImGui::End();
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 
         // set the view and projection matrix in the uniform block - we only have to do this once per loop iteration.
         glm::mat4 view = camera.GetViewMatrix();
@@ -253,24 +214,18 @@ int main()
         model = glm::mat4(1.0f);
         model = glm::translate(model, glm::vec3(0.75f, -0.75f, 0.0f)); // move bottom-right
         shaderBlue.setMat4("model", model);
-        shaderBlue.setVec4("testColor",glm::vec4(clear_color.x,clear_color.y,clear_color.z,clear_color.w));
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
-        glfwPollEvents();
         glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
     // optional: de-allocate all resources once they've outlived their purpose:
     // ------------------------------------------------------------------------
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteBuffers(1, &cubeVBO);
-
-    // Cleanup  imgui
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 
     glfwTerminate();
     return 0;
