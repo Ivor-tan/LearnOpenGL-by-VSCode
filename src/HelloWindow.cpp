@@ -168,8 +168,9 @@ int main()
   ImVec4 box2 = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
   ImVec4 box3 = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
   ImVec4 box4 = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
-
-  amount = 100; //第一次渲染少一点
+  float xoffset = 0;
+  float yoffset = 0;
+  amount = 1000; //第一次渲染少一点
   // render loop
   // -----------
   while (!glfwWindowShouldClose(window))
@@ -238,6 +239,15 @@ int main()
         // ImGui::ColorEdit3("box2 color", (float*)&box2); // Edit 3 floats representing a color
         // ImGui::ColorEdit3("box3 color", (float*)&box3); // Edit 3 floats representing a color
         // ImGui::ColorEdit3("box4 color", (float*)&box4); // Edit 3 floats representing a color
+        ImGui::SliderFloat("Camera xoffset", &xoffset, -100.0f, 100.0f);
+        ImGui::SliderFloat("Camera yoffset", &yoffset, -100.0f, 100.0f);
+        if (ImGui::Button("Change Camera"))
+        {
+            cout << "====Change Camera  ======" << endl;
+            camera.ProcessMouseMovement(xoffset, yoffset);
+            xoffset = 0;
+            yoffset = 0;
+        }
         ImGui::End();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
