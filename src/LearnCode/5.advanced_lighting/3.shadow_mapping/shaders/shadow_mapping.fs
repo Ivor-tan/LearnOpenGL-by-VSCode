@@ -33,6 +33,7 @@ float ShadowCalculation(vec4 fragPosLightSpace )
     // PCF
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    //循环多次采样，取平均值
     for(int x = -1; x <= 1; ++x)
     {
         for(int y = -1; y <= 1; ++y)
