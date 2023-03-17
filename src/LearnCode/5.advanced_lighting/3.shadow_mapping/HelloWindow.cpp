@@ -211,7 +211,7 @@ int main()
         // render scene from light's point of view
         simpleDepthShader.use();
         simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-        simpleDepthShader.setBool("isFragDepth", isFragDepth);
+        simpleDepthShader.setInt("isFragDepth", isFragDepth);
 
         glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
         glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
