@@ -9,5 +9,6 @@ DEAR_IMGUI  图形界面工具  https://github.com/ocornut/imgui
 
 https://docs.gl/   OpenGL在线文档
 
-
 GLSL Wiki https://www.khronos.org/opengl/wiki/Built-in_Variable_(GLSL)
+
+freetype https://freetype.org/ 字体渲染库
