@@ -56,7 +56,8 @@ LIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
 # define the C source files
 # SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
 SOURCES		= $(SOURCEDIRS)/GameBreakoutCode/program.cpp
-SOURCES		+= $(GAME_DIR)/game.cpp $(GAME_DIR)/resource_manager.cpp $(GAME_DIR)/texture.cpp $(GAME_DIR)/shader.cpp 
+SOURCES		+= $(GAME_DIR)/game.cpp
+SOURCES		+= $(GAME_DIR)/texture.cpp $(GAME_DIR)/shader.cpp $(GAME_DIR)/sprite_renderer.cpp
 # SOURCES		= $(SOURCEDIRS)/HelloWindow.cpp
 # SOURCES		+= $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 # SOURCES 	+= $(IMGUI_DIR)/imgui_impl_glfw.cpp $(IMGUI_DIR)/imgui_impl_opengl3.cpp
