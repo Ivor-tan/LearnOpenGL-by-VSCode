@@ -7,25 +7,31 @@
 ** option) any later version.
 ******************************************************************/
 #include "game.h"
-#include "resource_manager.cpp"
+#include "resource_manager.h"
 #include "sprite_renderer.h"
+#include "game_object.h"
 
+// Game-related State data
 SpriteRenderer  *Renderer;
+GameObject      *Player;
 
-Game::Game(unsigned int width, unsigned int height)
+Game::Game(unsigned int width, unsigned int height) 
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
-{
+{ 
+
 }
 
 Game::~Game()
 {
+    delete Renderer;
+    delete Player;
 }
 
 void Game::Init()
 {
-    
+    // FileSystem::getPath("resources/textures/awesomeface.png").c_str()
     // load shaders
-    ResourceManager::LoadShader(FileSystem::getPath("src/GameBreakoutCode/shaders/sprite.vs").c_str(), FileSystem::getPath("src/GameBreakoutCode/shaders/sprite.frag").c_str(), nullptr, "sprite");
+    ResourceManager::LoadShader("src/GameBreakoutCode/shaders/sprite.vs", "src/GameBreakoutCode/shaders/sprite.frag", nullptr, "sprite");
     // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width), 
         static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
@@ -34,20 +40,63 @@ void Game::Init()
     // set render-specific controls
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
     // load textures
-    
-    ResourceManager::LoadTexture(FileSystem::getPath("resources/textures/awesomeface.png").c_str(), true, "face");
-    // ResourceManager::LoadTexture("", true, "face");
+    ResourceManager::LoadTexture("resources/textures/background.jpg", false, "background");
+    ResourceManager::LoadTexture("resources/textures/awesomeface.png", true, "face");
+    ResourceManager::LoadTexture("resources/textures/block.png", false, "block");
+    ResourceManager::LoadTexture("resources/textures/block_solid.png", false, "block_solid");
+    ResourceManager::LoadTexture("resources/textures/paddle.png", true, "paddle");
+    // load levels
+    GameLevel one; one.Load("src/GameBreakoutCode/levels/one.lvl", this->Width, this->Height / 2);
+    GameLevel two; two.Load("src/GameBreakoutCode/levels/two.lvl", this->Width, this->Height / 2);
+    GameLevel three; three.Load("src/GameBreakoutCode/levels/three.lvl", this->Width, this->Height / 2);
+    GameLevel four; four.Load("src/GameBreakoutCode/levels/four.lvl", this->Width, this->Height / 2);
+    GameLevel five; five.Load("src/GameBreakoutCode/levels/five.lvl", this->Width, this->Height / 2);
+    GameLevel six; six.Load("src/GameBreakoutCode/levels/six.lvl", this->Width, this->Height / 2);
+    this->Levels.push_back(one);
+    this->Levels.push_back(two);
+    this->Levels.push_back(three);
+    this->Levels.push_back(four);
+    this->Levels.push_back(five);
+    this->Levels.push_back(six);
+    this->Level = 0;
+    // configure game objects
+    glm::vec2 playerPos = glm::vec2(this->Width / 2.0f - PLAYER_SIZE.x / 2.0f, this->Height - PLAYER_SIZE.y);
+    Player = new GameObject(playerPos, PLAYER_SIZE, ResourceManager::GetTexture("paddle"));
 }
 
 void Game::Update(float dt)
 {
+    
 }
 
 void Game::ProcessInput(float dt)
 {
+    if (this->State == GAME_ACTIVE)
+    {
+        float velocity = PLAYER_VELOCITY * dt;
+        // move playerboard
+        if (this->Keys[GLFW_KEY_A])
+        {
+            if (Player->Position.x >= 0.0f)
+                Player->Position.x -= velocity;
+        }
+        if (this->Keys[GLFW_KEY_D])
+        {
+            if (Player->Position.x <= this->Width - Player->Size.x)
+                Player->Position.x += velocity;
+        }
+    }
 }
 
 void Game::Render()
 {
-     Renderer->DrawSprite(ResourceManager::GetTexture("face"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    if(this->State == GAME_ACTIVE)
+    {
+        // draw background
+        Renderer->DrawSprite(ResourceManager::GetTexture("background"), glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f);
+        // draw level
+        this->Levels[this->Level].Draw(*Renderer);
+        // draw player
+        Player->Draw(*Renderer);
+    }
 }
