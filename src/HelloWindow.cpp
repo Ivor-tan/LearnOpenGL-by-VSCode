@@ -111,7 +111,7 @@ int main()
     // -------------------------
     // Shader shader("./src/shaders/bloom.vs", "./src/shaders/bloom.fs");
     Shader shader("./src/shaders/text.vs", "./src/shaders/text.fs");
-   glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCR_WIDTH), 0.0f, static_cast<float>(SCR_HEIGHT));
+    glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(SCR_WIDTH), 0.0f, static_cast<float>(SCR_HEIGHT));
     shader.use();
     glUniformMatrix4fv(glGetUniformLocation(shader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
@@ -250,15 +250,10 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        RenderText(shader, "中文字体  chinses", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-        RenderText(shader, "(C) LearnOpenGL.com", 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+        RenderText(shader, "Chinses", 25.0f, 25.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+        RenderText(shader, "(C) LearnOpenGL.com", 500.0f, 500.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
         { //================imgui  Code=====================
             // Start the Dear ImGui frame
-            // if (!io.WantCaptureMouse) {
-            //     ImGui::SetMouseCursor(ImGuiMouseCursor_None);
-            // }else{
-            //     ImGui::SetMouseCursor(ImGuiMouseCursor_Arrow);
-            // }
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
             ImGui::NewFrame();

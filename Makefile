@@ -3,6 +3,7 @@
 # 'make clean'  removes all .o and executable files
 #
 IMGUI_DIR = include/imgui
+GAME_DIR = include/game
 # define the Cpp compiler to use
 CXX = g++
 
@@ -28,7 +29,8 @@ LIB		:= lib
 LIBRARIES	:= -lglad -lglfw3dll -lzlibstatic -lassimp -lfreetype2
 
 ifeq ($(OS),Windows_NT)
-MAIN	:= main.exe
+# MAIN	:= main.exe
+MAIN	:= game.exe
 SOURCEDIRS	:= $(SRC)
 INCLUDEDIRS	:= $(INCLUDE)
 LIBDIRS		:= $(LIB)
@@ -53,9 +55,11 @@ LIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
 
 # define the C source files
 # SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
-SOURCES		= $(SOURCEDIRS)/HelloWindow.cpp 
-SOURCES		+= $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
-SOURCES 	+= $(IMGUI_DIR)/imgui_impl_glfw.cpp $(IMGUI_DIR)/imgui_impl_opengl3.cpp
+SOURCES		= $(SOURCEDIRS)/GameBreakoutCode/program.cpp
+SOURCES		+= $(GAME_DIR)/game.cpp $(GAME_DIR)/resource_manager.cpp $(GAME_DIR)/texture.cpp $(GAME_DIR)/shader.cpp 
+# SOURCES		= $(SOURCEDIRS)/HelloWindow.cpp
+# SOURCES		+= $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
+# SOURCES 	+= $(IMGUI_DIR)/imgui_impl_glfw.cpp $(IMGUI_DIR)/imgui_impl_opengl3.cpp
 # define the C object files 
 OBJECTS		:= $(SOURCES:.cpp=.o)
 # OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
