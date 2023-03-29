@@ -110,6 +110,12 @@ int main(int argc, char *argv[])
             {
                Breakout.Level = Level;
             };
+            if (ImGui::Button("Reset Ball"))
+            {
+                Breakout.BallReset();
+            }
+            // ImGui::Text("%i",&deltaTime);
+            
             ImGui::End();
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
