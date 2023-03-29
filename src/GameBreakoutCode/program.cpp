@@ -8,8 +8,8 @@
 ******************************************************************/
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <game/game.h>
-#include <game/resource_manager.h>
+#include "game/game.h"
+#include "game/resource_manager.h"
 #include <iostream>
 
 #include <imgui/imgui.h>
