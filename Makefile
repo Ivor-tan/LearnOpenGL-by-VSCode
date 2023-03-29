@@ -61,6 +61,7 @@ SOURCES		+= $(GAME_DIR)/texture.cpp $(GAME_DIR)/shader.cpp $(GAME_DIR)/sprite_re
 SOURCES		+= $(GAME_DIR)/game_level.cpp $(GAME_DIR)/game_object.cpp 
 SOURCES		+= $(GAME_DIR)/ball_object_collisions.cpp
 SOURCES		+= $(GAME_DIR)/particle_generator.cpp
+SOURCES		+= $(GAME_DIR)/post_processor.cpp
 # SOURCES		= $(SOURCEDIRS)/HelloWindow.cpp
 SOURCES		+= $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES 	+= $(IMGUI_DIR)/imgui_impl_glfw.cpp $(IMGUI_DIR)/imgui_impl_opengl3.cpp

@@ -17,8 +17,8 @@
 #include <imgui/imgui_impl_glfw.h>
 
 // GLFW function declarations
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
 // The Width of the screen
 const unsigned int SCREEN_WIDTH = 800;
@@ -67,8 +67,7 @@ int main(int argc, char *argv[])
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
-
-    //imgui Code
+    // imgui Code
     glfwSwapInterval(1); // Enable vsync
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -76,7 +75,8 @@ int main(int argc, char *argv[])
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
     int Level = 0;
-
+    bool EffectsChaos = false;
+    bool EffectsConfuse = false;
     while (!glfwWindowShouldClose(window))
     {
         // calculate delta time
@@ -100,7 +100,7 @@ int main(int argc, char *argv[])
         glClear(GL_COLOR_BUFFER_BIT);
         Breakout.Render();
 
-        //imgui code
+        // imgui code
         {
             ImGui_ImplOpenGL3_NewFrame();
             ImGui_ImplGlfw_NewFrame();
@@ -108,14 +108,22 @@ int main(int argc, char *argv[])
             ImGui::Begin("Setting");
             if (ImGui::SliderInt("Level", &Level, 0, 5))
             {
-               Breakout.Level = Level;
+                Breakout.Level = Level;
             };
             if (ImGui::Button("Reset Ball"))
             {
                 Breakout.BallReset();
             }
+            if (ImGui::Checkbox("Show Chaos", &EffectsChaos))
+            {
+                Breakout.EffectsChaos(EffectsChaos);
+            }
+            if (ImGui::Checkbox("Show EffectsConfuse", &EffectsConfuse))
+            {
+                Breakout.EffectsConfuse(EffectsConfuse);
+            }
             // ImGui::Text("%i",&deltaTime);
-            
+
             ImGui::End();
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -137,7 +145,7 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
     // when a user presses the escape key, we set the WindowShouldClose property to true, closing the application
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -151,9 +159,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     }
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and 
+    // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }

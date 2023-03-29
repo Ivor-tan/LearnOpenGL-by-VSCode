@@ -72,6 +72,8 @@ public:
     void ResetPlayer();
     // test code
     void BallReset();
+    void EffectsConfuse(bool isShow);
+    void EffectsChaos(bool isShow);
 };
 
 #endif
