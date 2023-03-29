@@ -10,11 +10,13 @@
 #include "resource_manager.h"
 #include "sprite_renderer.h"
 #include "game_object.h"
+#include "particle_generator.h"
 
 // Game-related State data
 SpriteRenderer *Renderer;
 GameObject *Player;
-static BallObject *Ball;
+BallObject *Ball;
+ParticleGenerator *Particles;
 
 GLboolean CheckCollision(GameObject &one, GameObject &two);
 Collision CheckCollision(BallObject &one, GameObject &two);
@@ -30,6 +32,7 @@ Game::~Game()
     delete Renderer;
     delete Player;
     delete Ball;
+    delete Particles;
 }
 
 void Game::Init()
@@ -37,19 +40,31 @@ void Game::Init()
     // FileSystem::getPath("resources/textures/awesomeface.png").c_str()
     // load shaders
     ResourceManager::LoadShader("src/GameBreakoutCode/shaders/sprite.vs", "src/GameBreakoutCode/shaders/sprite.frag", nullptr, "sprite");
+    ResourceManager::LoadShader("src/GameBreakoutCode/shaders/particle.vs", "src/GameBreakoutCode/shaders/particle.frag", nullptr, "particle");
     // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width),
                                       static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
     ResourceManager::GetShader("sprite").Use().SetInteger("image", 0);
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
-    // set render-specific controls
-    Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
+    ResourceManager::GetShader("particle").Use().SetInteger("sprite", 0);
+    ResourceManager::GetShader("particle").Use().SetMatrix4("projection", projection);
+
     // load textures
     ResourceManager::LoadTexture("resources/textures/background.jpg", false, "background");
     ResourceManager::LoadTexture("resources/textures/awesomeface.png", true, "face");
     ResourceManager::LoadTexture("resources/textures/block.png", false, "block");
     ResourceManager::LoadTexture("resources/textures/block_solid.png", false, "block_solid");
     ResourceManager::LoadTexture("resources/textures/paddle.png", true, "paddle");
+    ResourceManager::LoadTexture("resources/textures/particle.png", true, "particle");
+
+    // set render-specific controls
+    Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
+    // init Particles
+    Particles = new ParticleGenerator(
+        ResourceManager::GetShader("particle"),
+        ResourceManager::GetTexture("particle"),
+        500);
+        
     // load levels
     GameLevel one;
     one.Load("src/GameBreakoutCode/levels/one.lvl", this->Width, this->Height / 2);
@@ -92,6 +107,9 @@ void Game::Update(float dt)
         this->ResetLevel();
         this->ResetPlayer();
     }
+
+    // update particles
+    Particles->Update(dt, *Ball, 2, glm::vec2(Ball->Radius / 2.0f));
 }
 
 void Game::ProcessInput(float dt)
@@ -133,6 +151,8 @@ void Game::Render()
         this->Levels[this->Level].Draw(*Renderer);
         // draw player
         Player->Draw(*Renderer);
+        // draw particles
+        Particles->Draw();
         // draw ball
         Ball->Draw(*Renderer);
     }
