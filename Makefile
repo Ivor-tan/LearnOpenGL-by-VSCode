@@ -26,7 +26,7 @@ INCLUDE	:= include
 
 # define lib directory
 LIB		:= lib 
-LIBRARIES	:= -lglad -lglfw3dll -lzlibstatic -lassimp -lfreetype2
+LIBRARIES	:= -lglad -lglfw3dll -lzlibstatic -lassimp -lfreetype2 -lirrKlang
 
 ifeq ($(OS),Windows_NT)
 # MAIN	:= main.exe
