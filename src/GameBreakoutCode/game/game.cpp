@@ -18,9 +18,8 @@
 #include "post_processor.h"
 #include "power_up.h"
 #include "ball_object.h"
-#include "LearnOpenGL/filesystem.h"
 #include "text_renderer.h"
-
+#include "LearnOpenGL/filesystem.h"
 #include <irrklang/irrKlang.h>
 using namespace irrklang;
 
@@ -44,7 +43,7 @@ void ActivatePowerUp(PowerUp &powerUp);
 bool IsOtherPowerUpActive(std::vector<PowerUp> &powerUps, std::string type);
 
 Game::Game(unsigned int width, unsigned int height)
-    : State(GAME_ACTIVE), Keys(), Width(width), Height(height), Lives(3)
+    : State(GAME_MENU), Keys(), Width(width), Height(height), Lives(3), PowerUpProbability(75), PowerDownProbability(15)
 {
 }
 
@@ -62,17 +61,22 @@ Game::~Game()
 void Game::Init()
 {
     // play sound looper
-    SoundEngine->play2D(FileSystem::getPath("resources/audio/breakout.mp3").c_str(), GL_TRUE);
+    SoundEngine->play2D("resources/audio/breakout.mp3", GL_TRUE);
 
     // init Text Renderer
     Text = new TextRenderer(this->Width, this->Height);
-    Text->Load(FileSystem::getPath("resources/fonts/sanjichuyaoxingkai.ttf").c_str(), 24);
+    Text->Load("resources/fonts/sanjichuyaoxingkai.ttf", 24);
 
     // FileSystem::getPath("resources/textures/awesomeface.png").c_str()
     // load shaders
-    ResourceManager::LoadShader("src/GameBreakoutCode/shaders/sprite.vs", "src/GameBreakoutCode/shaders/sprite.frag", nullptr, "sprite");
-    ResourceManager::LoadShader("src/GameBreakoutCode/shaders/particle.vs", "src/GameBreakoutCode/shaders/particle.frag", nullptr, "particle");
-    ResourceManager::LoadShader("src/GameBreakoutCode/shaders/post_processing.vs", "src/GameBreakoutCode/shaders/post_processing.frag", nullptr, "postprocessing");
+    // ResourceManager::LoadShader(FileSystem::getPath("src/GameBreakoutCode/shaders/sprite.vs").c_str(), FileSystem::getPath("src/GameBreakoutCode/shaders/sprite.frag").c_str(), nullptr, "sprite");
+    // ResourceManager::LoadShader(FileSystem::getPath("src/GameBreakoutCode/shaders/particle.vs").c_str(), FileSystem::getPath("src/GameBreakoutCode/shaders/particle.frag").c_str(), nullptr, "particle");
+    // ResourceManager::LoadShader(FileSystem::getPath("src/GameBreakoutCode/shaders/post_processing.vs").c_str(), FileSystem::getPath("src/GameBreakoutCode/shaders/post_processing.frag").c_str(), nullptr, "postprocessing");
+
+    ResourceManager::LoadShader("./src/GameBreakoutCode/shaders/sprite.vs", "./src/GameBreakoutCode/shaders/sprite.frag", nullptr, "sprite");
+    ResourceManager::LoadShader("./src/GameBreakoutCode/shaders/particle.vs", "./src/GameBreakoutCode/shaders/particle.frag", nullptr, "particle");
+    ResourceManager::LoadShader("./src/GameBreakoutCode/shaders/post_processing.vs", "./src/GameBreakoutCode/shaders/post_processing.frag", nullptr, "postprocessing");
+
     // configure shaders
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->Width),
                                       static_cast<float>(this->Height), 0.0f, -1.0f, 1.0f);
@@ -110,16 +114,16 @@ void Game::Init()
     three.Load("src/GameBreakoutCode/levels/three.lvl", this->Width, this->Height / 2);
     GameLevel four;
     four.Load("src/GameBreakoutCode/levels/four.lvl", this->Width, this->Height / 2);
-    GameLevel five;
-    five.Load("src/GameBreakoutCode/levels/five.lvl", this->Width, this->Height / 2);
-    GameLevel six;
-    six.Load("src/GameBreakoutCode/levels/six.lvl", this->Width, this->Height / 2);
+    // GameLevel five;
+    // five.Load("src/GameBreakoutCode/levels/five.lvl", this->Width, this->Height / 2);
+    // GameLevel six;
+    // six.Load("src/GameBreakoutCode/levels/six.lvl", this->Width, this->Height / 2);
     this->Levels.push_back(one);
     this->Levels.push_back(two);
     this->Levels.push_back(three);
     this->Levels.push_back(four);
-    this->Levels.push_back(five);
-    this->Levels.push_back(six);
+    // this->Levels.push_back(five);
+    // this->Levels.push_back(six);
     this->Level = 0;
     // configure game objects
     glm::vec2 playerPos = glm::vec2(this->Width / 2.0f - PLAYER_SIZE.x / 2.0f, this->Height - PLAYER_SIZE.y);
@@ -297,13 +301,13 @@ void Game::DoCollisions()
                 {
                     box.Destroyed = true;
                     this->SpawnPowerUps(box);
-                    SoundEngine->play2D(FileSystem::getPath("resources/audio/bleep.mp3").c_str(), false);
+                    SoundEngine->play2D("resources/audio/bleep.mp3", false);
                 }
                 else
                 { // if block is solid, enable shake effect
                     ShakeTime = 0.05f;
                     Effects->Shake = true;
-                    SoundEngine->play2D(FileSystem::getPath("resources/audio/bleep.mp3").c_str(), false);
+                    SoundEngine->play2D("resources/audio/bleep.mp3", false);
                 }
                 // collision resolution
                 Direction dir = std::get<1>(collision);
@@ -349,7 +353,7 @@ void Game::DoCollisions()
                 ActivatePowerUp(powerUp);
                 powerUp.Destroyed = true;
                 powerUp.Activated = true;
-                SoundEngine->play2D(FileSystem::getPath("resources/audio/powerup.wav").c_str(), false);
+                SoundEngine->play2D("resources/audio/powerup.wav", false);
             }
         }
     }
@@ -374,7 +378,7 @@ void Game::DoCollisions()
         // if Sticky powerup is activated, also stick ball to paddle once new velocity vectors were calculated
         Ball->Stuck = Ball->Sticky;
 
-        SoundEngine->play2D(FileSystem::getPath("resources/audio/powerup.wav").c_str(), false);
+        SoundEngine->play2D("resources/audio/powerup.wav", false);
     }
 }
 
@@ -441,17 +445,17 @@ bool ShouldSpawn(unsigned int chance)
 
 void Game::SpawnPowerUps(GameObject &block)
 {
-    if (ShouldSpawn(75)) // 1 in 75 chance
+    if (ShouldSpawn(PowerUpProbability)) // 1 in 75 chance
         this->PowerUps.push_back(PowerUp("speed", glm::vec3(0.5f, 0.5f, 1.0f), 0.0f, block.Position, ResourceManager::GetTexture("powerup_speed")));
-    if (ShouldSpawn(75))
+    if (ShouldSpawn(PowerUpProbability))
         this->PowerUps.push_back(PowerUp("sticky", glm::vec3(1.0f, 0.5f, 1.0f), 20.0f, block.Position, ResourceManager::GetTexture("powerup_sticky")));
-    if (ShouldSpawn(75))
+    if (ShouldSpawn(PowerUpProbability))
         this->PowerUps.push_back(PowerUp("pass-through", glm::vec3(0.5f, 1.0f, 0.5f), 10.0f, block.Position, ResourceManager::GetTexture("powerup_passthrough")));
-    if (ShouldSpawn(75))
+    if (ShouldSpawn(PowerUpProbability))
         this->PowerUps.push_back(PowerUp("pad-size-increase", glm::vec3(1.0f, 0.6f, 0.4), 0.0f, block.Position, ResourceManager::GetTexture("powerup_increase")));
-    if (ShouldSpawn(15)) // Negative powerups should spawn more often
+    if (ShouldSpawn(PowerDownProbability)) // Negative powerups should spawn more often
         this->PowerUps.push_back(PowerUp("confuse", glm::vec3(1.0f, 0.3f, 0.3f), 15.0f, block.Position, ResourceManager::GetTexture("powerup_confuse")));
-    if (ShouldSpawn(15))
+    if (ShouldSpawn(PowerDownProbability))
         this->PowerUps.push_back(PowerUp("chaos", glm::vec3(0.9f, 0.25f, 0.25f), 15.0f, block.Position, ResourceManager::GetTexture("powerup_chaos")));
 }
 

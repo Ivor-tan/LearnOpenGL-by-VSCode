@@ -10,7 +10,6 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include <learnopengl/filesystem.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -60,8 +59,8 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
     try
     {
         // open files
-        std::ifstream vertexShaderFile(FileSystem::getPath(vShaderFile).c_str());
-        std::ifstream fragmentShaderFile(FileSystem::getPath(fShaderFile).c_str());
+        std::ifstream vertexShaderFile(vShaderFile);
+        std::ifstream fragmentShaderFile(fShaderFile);
         std::stringstream vShaderStream, fShaderStream;
         // read file's buffer contents into streams
         vShaderStream << vertexShaderFile.rdbuf();
@@ -106,7 +105,7 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha)
     }
     // load image
     int width, height, nrChannels;
-    unsigned char *data = stbi_load(FileSystem::getPath(file).c_str(), &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load(file, &width, &height, &nrChannels, 0);
     // now generate texture
     texture.Generate(width, height, data);
     // and finally free image data

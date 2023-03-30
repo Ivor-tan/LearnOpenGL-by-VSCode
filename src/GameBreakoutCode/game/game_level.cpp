@@ -10,7 +10,6 @@
 
 #include <fstream>
 #include <sstream>
-#include <learnopengl/filesystem.h>
 
 
 void GameLevel::Load(const char *file, unsigned int levelWidth, unsigned int levelHeight)
@@ -21,7 +20,7 @@ void GameLevel::Load(const char *file, unsigned int levelWidth, unsigned int lev
     unsigned int tileCode;
     GameLevel level;
     std::string line;
-    std::ifstream fstream(FileSystem::getPath(file).c_str());
+    std::ifstream fstream(file);
     std::vector<std::vector<unsigned int>> tileData;
     if (fstream)
     {

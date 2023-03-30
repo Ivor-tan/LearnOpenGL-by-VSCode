@@ -76,6 +76,8 @@ int main(int argc, char *argv[])
     int Level = 0;
     bool EffectsChaos = false;
     bool EffectsConfuse = false;
+    int PowerUpProbability = 25;
+    int PowerDownProbability = 25;
     while (!glfwWindowShouldClose(window))
     {
         // calculate delta time
@@ -121,8 +123,18 @@ int main(int argc, char *argv[])
             {
                 Breakout.EffectsConfuse(EffectsConfuse);
             }
+            if (ImGui::SliderInt("PowerUpProbability", &PowerUpProbability, 0, 100))
+            {
+                Breakout.PowerUpProbability = (100 - PowerUpProbability);
+                std::cout <<"Breakout.PowerUpProbability"<< Breakout.PowerUpProbability<<std::endl;
+                std::cout <<"PowerUpProbability"<< PowerUpProbability<<std::endl;
+            }
+            if (ImGui::SliderInt("PowerDownProbability", &PowerDownProbability, 0, 100))
+            {
+                Breakout.PowerDownProbability = (100 - PowerDownProbability);
+                std::cout <<"Breakout.PowerDownProbability"<< Breakout.PowerDownProbability<<std::endl;
+            }
             // ImGui::Text("%i",&deltaTime);
-
             ImGui::End();
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -155,9 +167,8 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
             Breakout.Keys[key] = true;
         else if (action == GLFW_RELEASE)
             Breakout.Keys[key] = false;
-            Breakout.KeysProcessed[key] = GL_FALSE;
+        Breakout.KeysProcessed[key] = GL_FALSE;
     }
-
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)

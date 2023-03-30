@@ -82,6 +82,8 @@ public:
     void BallReset();
     void EffectsConfuse(bool isShow);
     void EffectsChaos(bool isShow);
+    int PowerUpProbability;
+    int PowerDownProbability;
 };
 
 #endif
