@@ -13,7 +13,7 @@
 #include <GLFW/glfw3.h>
 
 #include "game_level.h"
-#include "ball_object_collisions.h"
+#include "power_up.h"
 
 // Represents the current state of the game
 enum GameState
@@ -70,6 +70,12 @@ public:
 
     void ResetLevel();
     void ResetPlayer();
+
+    //道具
+    std::vector<PowerUp>  PowerUps;
+    void SpawnPowerUps(GameObject &block);
+    void UpdatePowerUps(float dt);
+
     // test code
     void BallReset();
     void EffectsConfuse(bool isShow);
