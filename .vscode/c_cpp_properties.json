@@ -3,8 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
-                "${workspaceFolder}/src/GameBreakoutCode"
+                "${workspaceFolder}/**"
             ],
             "defines": [
                 "_DEBUG",

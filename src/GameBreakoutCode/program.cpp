@@ -8,13 +8,12 @@
 ******************************************************************/
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <iostream>
 #include "game/game.h"
 #include "game/resource_manager.h"
-#include <iostream>
-
-#include <imgui/imgui.h>
-#include <imgui/imgui_impl_opengl3.h>
-#include <imgui/imgui_impl_glfw.h>
+#include "../imgui/imgui.h"
+#include "../imgui/imgui_impl_opengl3.h"
+#include "../imgui/imgui_impl_glfw.h"
 
 // GLFW function declarations
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);

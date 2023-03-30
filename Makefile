@@ -2,7 +2,7 @@
 # 'make'        build executable file 'main'
 # 'make clean'  removes all .o and executable files
 #
-IMGUI_DIR = src/GameBreakoutCode/imgui
+IMGUI_DIR = src/imgui
 GAME_DIR = src/GameBreakoutCode/game
 # define the Cpp compiler to use
 CXX = g++
@@ -55,18 +55,10 @@ LIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
 
 # define the C source files
 # SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
-SOURCES		= $(SOURCEDIRS)/GameBreakoutCode/program.cpp
-SOURCES		+= $(wildcard $(patsubst %,%/*.cpp, $(GAME_DIR)))
-SOURCES		+= $(wildcard $(patsubst %,%/*.cpp, $(IMGUI_DIR)))
-# SOURCES		+= $(GAME_DIR)/game.cpp $(GAME_DIR)/resource_manager.cpp 
-# SOURCES		+= $(GAME_DIR)/texture.cpp $(GAME_DIR)/shader.cpp $(GAME_DIR)/sprite_renderer.cpp
-# SOURCES		+= $(GAME_DIR)/game_level.cpp $(GAME_DIR)/game_object.cpp 
-# SOURCES		+= $(GAME_DIR)/ball_object_collisions.cpp
-# SOURCES		+= $(GAME_DIR)/particle_generator.cpp
-# SOURCES		+= $(GAME_DIR)/post_processor.cpp
-# SOURCES		= $(SOURCEDIRS)/HelloWindow.cpp
-# SOURCES		+= $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
-# SOURCES 	+= $(IMGUI_DIR)/imgui_impl_glfw.cpp $(IMGUI_DIR)/imgui_impl_opengl3.cpp
+SOURCES		= $(SOURCEDIRS)/GameBreakoutCode/program.cpp  #主程序
+SOURCES		+= $(wildcard $(patsubst %,%/*.cpp, $(GAME_DIR))) #game相关代码
+SOURCES		+= $(wildcard $(patsubst %,%/*.cpp, $(IMGUI_DIR))) #imgui相关代码
+# SOURCES		= $(SOURCEDIRS)/HelloWindow.cpp  #HelloWindow 学习主程序代码
 # define the C object files 
 OBJECTS		:= $(SOURCES:.cpp=.o)
 # OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
